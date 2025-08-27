@@ -1,6 +1,10 @@
 package router
 
-import "github.com/gin-gonic/gin"
+import (
+	"task4/controller"
+
+	"github.com/gin-gonic/gin"
+)
 
 func SetRouters(r *gin.Engine) {
 	// 定义路由
@@ -9,4 +13,11 @@ func SetRouters(r *gin.Engine) {
 			"message": "hello world ver",
 		})
 	})
+	v1 := r.Group("/api")
+	{
+		v1.GET("/articles", controller.GetArticles)
+		v1.GET("/article/:id", controller.GetArticle)
+		v1.POST("/register", controller.Register)
+		v1.POST("/login", controller.Login)
+	}
 }
