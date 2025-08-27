@@ -19,5 +19,6 @@ func SetRouters(r *gin.Engine) {
 		v1.GET("/article/:id", controller.GetArticle)
 		v1.POST("/register", controller.Register)
 		v1.POST("/login", controller.Login)
+
 	}
 }
