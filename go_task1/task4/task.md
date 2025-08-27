@@ -56,3 +56,18 @@
    - 返回合适的 HTTP 状态码和错误信息
 2. 2.
    使用日志库记录系统的运行信息和错误信息，方便后续的调试和维护
+
+## 测试数据
+-- 添加测试文章，关联已创建的用户
+INSERT INTO posts (title, content, user_id, created_at, updated_at) VALUES
+('Go语言入门指南', '这是一篇关于Go语言基础知识的入门文章，包括变量、数据类型、控制流等内容。Go语言是由Google开发的开源编程语言，它具有静态类型、并发特性和垃圾回收机制。', 1, NOW(), NOW()),
+('使用Gin框架构建Web应用', '本文介绍如何使用Gin框架快速构建高性能的Web应用。Gin是一个用Go语言编写的Web框架，它具有轻量级、高性能的特点，适合构建各种Web服务。', 1, NOW(), NOW()),
+('GORM数据库操作详解', 'GORM是Go语言中最流行的ORM库之一，本文详细介绍了如何使用GORM进行数据库的增删改查操作，以及如何处理关联关系等高级特性。', 2, NOW(), NOW()),
+('Go并发编程实践', 'Go语言的一大特色是其内置的并发支持，本文通过实例讲解了goroutine和channel的使用方法，以及如何避免常见的并发问题。', 3, NOW(), NOW()),
+('Go项目结构最佳实践', '一个良好的项目结构对于代码的可维护性至关重要。本文分享了Go项目的最佳目录结构设计，以及如何组织代码以提高可读性和可扩展性。', 2, NOW(), NOW());
+
+-- 添加测试用户
+INSERT INTO users (username, password, email, created_at, updated_at) VALUES
+('admin', '$2a$10$mN9uSfK1P6j7Jd7V8g9hKOpQwErTyUiPoAsDfGhJkLzXcVbNm', 'admin@example.com', NOW(), NOW()),
+('user1', '$2a$10$aBcDeFgHiJkLmNoPqRsTuVwXyZ1234567890', 'user1@example.com', NOW(), NOW()),
+('user2', '$2a$10$zYxWvUtSrQpOnMlKjIhGfEdCbA987654321', 'user2@example.com', NOW(), NOW());

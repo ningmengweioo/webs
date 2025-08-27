@@ -31,12 +31,15 @@ func Register(c *gin.Context) {
 		return
 	}
 	// 3. 检查用户名或邮箱是否已存在
-	var existingUser models.Users
-	error := db.Where("name = ? OR email = ?", req.Name, req.Email).First(&existingUser).Error
+	var count int64
+	err := db.Table("users").Where("name = ? OR email = ?", req.Name, req.Email).Count(&count).Error
 
-	if error != nil {
-		common.UnknownErrorRes(c, "检查用户名或邮箱是否已存在失败", error)
+	if err != nil {
+		common.UnknownErrorRes(c, "检查用户名或邮箱是否已存在失败", err)
 		return
+	}
+	if count > 0 {
+		common.UnknownErrorRes(c, "检查用户名或邮箱已存在")
 	}
 
 	// 4. 加密密码
@@ -63,7 +66,7 @@ func Register(c *gin.Context) {
 	// 6. 返回成功响应（不包含密码等敏感信息）
 	responseUser := gin.H{
 		"id":         newUser.ID,
-		"username":   newUser.Name,
+		"name":       newUser.Name,
 		"email":      newUser.Email,
 		"created_at": newUser.CreatedAt.Format("2006-01-02 15:04:05"),
 	}
@@ -73,9 +76,10 @@ func Register(c *gin.Context) {
 
 // Login 用户登录接口
 func Login(c *gin.Context) {
+
 	// 1. 绑定请求参数
 	var req struct {
-		Username string `json:"username" binding:"required"`
+		Name     string `json:"name" binding:"required"`
 		Password string `json:"password" binding:"required"`
 	}
 
@@ -93,7 +97,7 @@ func Login(c *gin.Context) {
 
 	// 3. 查询用户信息
 	var user models.Users
-	error := db.Where("username = ?", req.Username).First(&user).Error
+	error := db.Where("name = ?", req.Name).First(&user).Error
 
 	if error != nil {
 		common.UnknownErrorRes(c, "查询用户信息失败", error)
@@ -107,16 +111,18 @@ func Login(c *gin.Context) {
 	}
 
 	// 5. 生成JWT令牌（这里需要根据项目的JWT配置来实现）
-	// 假设使用了标准的JWT库，以下是示例代码
-	// token := generateToken(user.ID, user.Username)
-	// 由于没有具体的JWT配置，这里简化返回
+	token, err := common.GenerateToken(user.ID, user.Name)
+	if err != nil {
+		common.UnknownErrorRes(c, "生成token失败", err)
+		return
+	}
 
 	// 6. 返回登录成功响应
 	responseData := gin.H{
 		"id":    user.ID,
 		"name":  user.Name,
 		"email": user.Email,
-		"token": "placeholder_jwt_token", // 实际项目中应替换为真实生成的token
+		"token": token,
 		//expiresAt: time.Now().Add(24 * time.Hour).Unix(), // token过期时间
 	}
 

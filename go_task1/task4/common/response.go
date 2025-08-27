@@ -30,11 +30,21 @@ func ParamsErrorRes(c *gin.Context, msg string, value ...interface{}) {
 }
 
 // UnknownErrorResp 未知错误、服务器错误
-func UnknownErrorRes(c *gin.Context, msg string, err error) {
+func UnknownErrorRes(c *gin.Context, msg string, err ...error) {
 	//config.Logger(c).Error(err, err.Error())
+	var errorMsg interface{}
+
+	// 检查是否提供了err参数
+	if len(err) > 0 && err[0] != nil {
+		errorMsg = err[0].Error()
+	} else {
+		errorMsg = nil
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"code":  500,
 		"msg":   msg,
-		"error": err.Error(),
+		"error": errorMsg,
 	})
+
 }
