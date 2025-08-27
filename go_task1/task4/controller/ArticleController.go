@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"task4/common"
 	"task4/config"
 	"task4/models"
 
@@ -85,10 +86,6 @@ func GetArticle(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code":    200,
-		"message": "获取文章成功",
-		"data":    article,
-	})
+	common.Success(c, article)
 
 }
