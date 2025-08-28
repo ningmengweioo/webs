@@ -16,9 +16,13 @@ func init() {
 		log.Fatalf("%+v", errors.WithStack(err))
 	}
 
+	config.InitLogger()
+	config.Info("Configuration loaded successfully")
+
 	// 初始化数据库
 	_, db_err := config.InitDB(config.GetConf())
 	if db_err != nil {
+		config.Fatal("InitDB failed", "err", db_err)
 		log.Fatalf("%+v", errors.WithStack(db_err))
 	}
 
