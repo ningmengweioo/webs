@@ -118,13 +118,12 @@ func Login(c *gin.Context) {
 	}
 
 	// 6. 返回登录成功响应
-	responseData := gin.H{
-		"id":    user.ID,
-		"name":  user.Name,
-		"email": user.Email,
-		"token": token,
-		//expiresAt: time.Now().Add(24 * time.Hour).Unix(), // token过期时间
-	}
+	res := make(map[string]interface{})
+	res["id"] = user.ID
+	res["name"] = user.Name
+	res["email"] = user.Email
+	res["token"] = token
+	res["expiresAt"] = time.Now().Add(24 * time.Hour).Unix()
 
-	common.Success(c, responseData)
+	common.Success(c, res)
 }
